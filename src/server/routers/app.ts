@@ -1,9 +1,16 @@
-import users from '../../../data/users.json';
 import * as trpc from '@trpc/server';
+import { Prisma } from '@prisma/client';
+import { prisma } from '../prisma';
 
-export const appRouter = trpc.router().query('getUsers', {
+const defaultPostsSelect = Prisma.validator<Prisma.PostsSelect>()({
+  id: true,
+  title: true,
+});
+
+export const appRouter = trpc.router().query('getPosts', {
   async resolve() {
-    return users;
+    const posts = await prisma.posts.findMany({ select: defaultPostsSelect });
+    return posts;
   },
 });
 
