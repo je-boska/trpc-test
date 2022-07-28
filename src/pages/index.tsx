@@ -16,15 +16,6 @@ export default function Home() {
 
   return (
     <Layout>
-      <ul>
-        {posts.data.map(({ title, id }) => (
-          <li key={id}>
-            <h4>
-              {id} {title}
-            </h4>
-          </li>
-        ))}
-      </ul>
       <form
         onSubmit={async (e) => {
           e.preventDefault();
@@ -45,6 +36,15 @@ export default function Home() {
         <input id='title' name='title' placeholder='Title'></input>
         <button type='submit'>Submit</button>
       </form>
+      <ul>
+        {posts.data.map(({ title, id }) => (
+          <li key={id}>
+            <h4>
+              {id} {title}
+            </h4>
+          </li>
+        ))}
+      </ul>
     </Layout>
   );
 }
