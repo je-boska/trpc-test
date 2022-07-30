@@ -18,4 +18,12 @@ export const postsRouter = createRouter()
       });
       return post;
     },
+  })
+  .mutation('delete', {
+    input: z.object({
+      id: z.number().min(1),
+    }),
+    async resolve({ ctx, input }) {
+      await ctx.posts.delete({ where: { id: input.id } });
+    },
   });

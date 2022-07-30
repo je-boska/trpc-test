@@ -2,7 +2,7 @@ import * as trpc from '@trpc/server';
 import * as trpcNext from '@trpc/server/adapters/next';
 import superjson from 'superjson';
 import { prisma } from '../../../server/prisma';
-import { postsRouter } from '../../../server/routers/app';
+import { postsRouter } from '../../../server/routers/posts';
 
 export async function createContext(
   ctxOptions?: trpcNext.CreateNextContextOptions

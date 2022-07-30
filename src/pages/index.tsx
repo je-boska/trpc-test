@@ -9,6 +9,11 @@ export default function Home() {
       await utils.invalidateQueries(['posts.all']);
     },
   });
+  const deletePost = trpc.useMutation(['posts.delete'], {
+    async onSuccess() {
+      await utils.invalidateQueries(['posts.all']);
+    },
+  });
 
   if (!posts.data) {
     return <div>Loading...</div>;
@@ -23,18 +28,16 @@ export default function Home() {
           const input = {
             title: $title.value,
           };
-
-          console.log(input);
-
           try {
             await createPost.mutateAsync(input);
-
             $title.value = '';
           } catch {}
         }}
       >
         <input id='title' name='title' placeholder='Title'></input>
-        <button type='submit'>Submit</button>
+        <button type='submit' disabled={createPost.isLoading}>
+          Submit
+        </button>
       </form>
       <ul>
         {posts.data.map(({ title, id }) => (
@@ -42,6 +45,15 @@ export default function Home() {
             <h4>
               {id} {title}
             </h4>
+            <button
+              disabled={deletePost.isLoading}
+              onClick={async (e) => {
+                e.preventDefault();
+                deletePost.mutateAsync({ id });
+              }}
+            >
+              Delete
+            </button>
           </li>
         ))}
       </ul>
