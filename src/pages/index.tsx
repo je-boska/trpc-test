@@ -3,10 +3,10 @@ import { trpc } from '../utils/trpc';
 
 export default function Home() {
   const utils = trpc.useContext();
-  const posts = trpc.useQuery(['getPosts']);
-  const createPost = trpc.useMutation(['createPost'], {
+  const posts = trpc.useQuery(['posts.all']);
+  const createPost = trpc.useMutation(['posts.add'], {
     async onSuccess() {
-      await utils.invalidateQueries(['getPosts']);
+      await utils.invalidateQueries(['posts.all']);
     },
   });
 

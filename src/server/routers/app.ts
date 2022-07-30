@@ -1,33 +1,21 @@
-import { Prisma } from '@prisma/client';
-import { prisma } from '../prisma';
 import { z } from 'zod';
-import { createRouter } from '../createRouter';
-import superjson from 'superjson';
+import { createRouter } from '../../pages/api/trpc/[trpc]';
 
-const defaultPostsSelect = Prisma.validator<Prisma.PostsSelect>()({
-  id: true,
-  title: true,
-});
-
-export const appRouter = createRouter()
-  .transformer(superjson)
-  .query('getPosts', {
-    async resolve() {
-      const posts = await prisma.posts.findMany({ select: defaultPostsSelect });
+export const postsRouter = createRouter()
+  .query('all', {
+    async resolve({ ctx }) {
+      const posts = await ctx.posts.findMany({ orderBy: { id: 'asc' } });
       return posts;
     },
   })
-  .mutation('createPost', {
+  .mutation('add', {
     input: z.object({
       title: z.string().min(1).max(200),
     }),
-    async resolve({ input }) {
-      const post = prisma.posts.create({
+    async resolve({ ctx, input }) {
+      const post = await ctx.posts.create({
         data: input,
-        select: defaultPostsSelect,
       });
       return post;
     },
   });
-
-export type AppRouter = typeof appRouter;
